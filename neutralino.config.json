@@ -1,0 +1,32 @@
+{
+  "applicationId": "js.neutralino.zero",
+  "version": "1.0.0",
+  "defaultMode": "window",
+  "documentRoot": "/public/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "nativeAllowList": [
+    "app.*"
+  ],
+  "modes": {
+    "window": {
+      "title": "DGT-SpaceSharkGame",
+      "maximize": true,
+      "resizable": false,
+      "icon": "/public/favicon.png"
+    }
+  },
+  "cli": {
+    "binaryName": "svelte",
+    "resourcesPath": "/public/",
+    "extensionsPath": "/extensions/",
+    "clientLibrary": "/public/neutralino.js",
+    "binaryVersion": "4.7.0",
+    "clientVersion": "3.6.0",
+    "frontendLibrary": {
+        "patchFile": "/public/index.html",
+        "devUrl": "http://localhost:5000"
+    }
+  }
+}

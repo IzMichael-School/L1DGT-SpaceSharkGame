@@ -137,7 +137,7 @@
     };
 </script>
 
-<div bind:this={wrapper} class="flex flex-row items-center justify-evenly w-screen py-5 bg-[#141931] h-screen overflow-hidden">
+<div bind:this={wrapper} class="flex flex-row items-center justify-evenly w-screen bg-[#141931] h-screen overflow-hidden">
     <h1 class="text-4xl font-bold text-white rotate-180 vertical-rl font-clean">DGT - Shark Space Game</h1>
 </div>
 
