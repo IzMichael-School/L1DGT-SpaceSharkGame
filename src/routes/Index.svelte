@@ -89,24 +89,39 @@
 
     function update() {
         // WASD Movement
+        player.setVelocityX(0);
+        player.setVelocityY(0);
+
         if (keys.W.isDown) {
             // Move North
+            player.setVelocityY(-speed);
+            player.anims.play('move', true);
         }
         if (keys.A.isDown) {
             // Move West
+            player.setVelocityX(-speed);
+            player.anims.play('move', true);
         }
         if (keys.S.isDown) {
             // Move South
+            player.setVelocityY(speed);
+            player.anims.play('move', true);
         }
         if (keys.D.isDown) {
             // Move East
+            player.setVelocityX(speed);
+            player.anims.play('move', true);
         }
 
         // Arrow Key Rotation
         if (arrows.left.isDown) {
             // Rotate Anti-Clockwise
+            player.setAngle(player.angle - speed / 100);;
+            player.anims.play('move', true);
         } else if (arrows.right.isDown) {
             // Rotate Clockwise
+            player.setAngle(player.angle + speed / 100);;
+            player.anims.play('move', true);
         }
     };
 </script>
