@@ -46,10 +46,34 @@
 
     function preload() {
         // Import assets
+        this.load.image('space', 'assets/img/space.png');
+        this.load.spritesheet('shark', 'assets/img/shark-sheet.png', {
+            frameWidth: 115/2,
+            frameHeight: 30
+        });
     }
 
     function create() {
         // Create sprites, keyboard listeners, and text displays
+        
+        // Add simple background for the game
+        assets.spacebg = this.add.image(centre.x, centre.y, 'space').setScale(0.5);
+
+        // The player and its settings
+        player = this.physics.add.sprite(100, 250, 'shark').setScale(1).refreshBody();
+        player.setCollideWorldBounds(true);
+        player.setAngle(0);
+
+        // The player's movement animation
+        this.anims.create({
+            key: 'move',
+            frames: this.anims.generateFrameNumbers('shark', {
+                start: 0,
+                end: 1
+            }),
+            frameRate: 10,
+            repeat: 1
+        });
 
         // Add controls listeners and bindings
         arrows = this.input.keyboard.createCursorKeys();
