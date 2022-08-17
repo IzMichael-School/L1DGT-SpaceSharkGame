@@ -51,6 +51,7 @@
             frameWidth: 115/2,
             frameHeight: 30
         });
+        this.load.image('earth', 'assets/img/earth2.png');
     };
 
     function create() {
@@ -58,6 +59,9 @@
         
         // Add simple background for the game
         assets.spacebg = this.add.image(centre.x, centre.y, 'space').setScale(0.5);
+
+        // Add Earth at the bottom of the viewport 
+        assets.earth = this.add.image(centre.x, config.height + 1000, 'earth').setScale(2);
 
         // The player and its settings
         player = this.physics.add.sprite(100, 250, 'shark').setScale(1).refreshBody();
