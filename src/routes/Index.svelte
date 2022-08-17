@@ -51,7 +51,7 @@
             frameWidth: 115/2,
             frameHeight: 30
         });
-    }
+    };
 
     function create() {
         // Create sprites, keyboard listeners, and text displays
@@ -85,7 +85,11 @@
         keys.W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
         game.input.mouse.capture = 'true';
-    }
+
+        // Add HP indicators
+        player.hp = 100;
+        assets.sharkhp = this.add.text(10, 10, 'HP: ' + player.hp + '%').setFontFamily('Nunito Sans').setFontSize(16);
+    };
 
     function update() {
         // WASD Movement
@@ -123,6 +127,9 @@
             player.setAngle(player.angle + speed / 100);;
             player.anims.play('move', true);
         }
+
+        // Player HP Tracks Player
+        assets.sharkhp.setX(player.x - (assets.sharkhp.width / 2)).setY(player.y - 50).setText('HP: ' + player.hp + '%');
     };
 </script>
 
