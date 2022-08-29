@@ -32,6 +32,12 @@
                     debug: false
                 }
             },
+            // physics: {
+            //     default: 'matter',
+            //     arcade: {
+            //         debug: false
+            //     }
+            // },
             scene: {
                 preload: preload,
                 create: create,
@@ -52,6 +58,7 @@
             frameHeight: 30
         });
         this.load.image('earth', 'assets/img/earth2.png');
+        this.load.image('asteroid', 'assets/img/asteroid.png');
     };
 
     function create() {
@@ -64,9 +71,10 @@
         assets.earth = this.add.image(centre.x, config.height + 1000, 'earth').setScale(2);
 
         // The player and its settings
-        player = this.physics.add.sprite(100, 250, 'shark').setScale(1).refreshBody();
+        player = this.physics.add.sprite(centre.x, centre.y, 'shark').setScale(1).refreshBody();
         player.setCollideWorldBounds(true);
         player.setAngle(0);
+        player.flipX = true;
 
         // The player's movement animation
         this.anims.create({
@@ -80,8 +88,11 @@
         });
 
         // Add controls listeners and bindings
+        player.setDamping(true);
+        player.setDrag(0.33);
+        player.setMaxVelocity(200);
+
         arrows = this.input.keyboard.createCursorKeys();
-        console.log(arrows, Phaser.Input.Keyboard.KeyCodes)
         
         keys.A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keys.S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -90,50 +101,102 @@
 
         game.input.mouse.capture = 'true';
 
+        // Add Asteroids
+        assets.asteroids = this.physics.add.group({
+            // key: 'asteroid',
+            // repeat: 15,
+            // setXY: { x: -500, y: -500, stepX: 150 }
+        });
+        // this.time.delayedCall(1000, () => {
+        //     assets.asteroids.children.entries.forEach(asteroid => {
+        //         this.physics.moveTo(asteroid, centre.x + (Math.random() * (500 - (-500) + 1) + -500), config.height, Math.random() * (300 - 25 + 1) + 25);
+        //         this.physics.add.overlap(assets.earth, asteroid, (earth, asteroid) => {
+        //             console.log('bump')
+        //             assets.earth.hp -= 20;
+        //             asteroid.disableBody(true, true);
+        //         }, null, this);
+        //     });
+        // }, null, this);
+
+        setInterval(() => {
+            let asteroid = assets.asteroids.create((Math.random() * (500 - (-500) + 1) + -500), -500, 'asteroid');
+            this.physics.moveTo(asteroid, centre.x + (Math.random() * (500 - (-500) + 1) + -500), config.height, Math.random() * (300 - 25 + 1) + 25);
+            this.physics.add.overlap(assets.earth, asteroid, (earth, asteroid) => {
+                console.log('bump')
+                assets.earth.hp -= 20;
+                asteroid.disableBody(true, true);
+            }, null, this);
+        }, 1000);
+
         // Add HP indicators
-        player.hp = 100;
         assets.sharkhp = this.add.text(10, 10, 'HP: ' + player.hp + '%').setFontFamily('Nunito Sans').setFontSize(16);
+        player.hp = 100;
+        
+        assets.earthhp = this.add.text(centre.x, config.height - 60, 'HP: ' + assets.earth.hp + '%').setFontFamily('Nunito Sans').setFontSize(32);
+        assets.earth.hp = 100;
+
+        // Add HP Collision Functions
+        this.physics.add.overlap(player, assets.asteroids, (player, asteroid) => {
+            player.hp -= 10;
+            asteroid.disableBody(true, true);
+        }, null, this);
     };
 
     function update() {
         // WASD Movement
-        player.setVelocityX(0);
-        player.setVelocityY(0);
+        // player.setVelocityX(0);
+        // player.setVelocityY(0);
 
-        if (keys.W.isDown) {
-            // Move North
-            player.setVelocityY(-speed);
-            player.anims.play('move', true);
-        }
-        if (keys.A.isDown) {
-            // Move West
-            player.setVelocityX(-speed);
-            player.anims.play('move', true);
-        }
-        if (keys.S.isDown) {
-            // Move South
-            player.setVelocityY(speed);
-            player.anims.play('move', true);
-        }
-        if (keys.D.isDown) {
-            // Move East
-            player.setVelocityX(speed);
-            player.anims.play('move', true);
-        }
+        // if (keys.W.isDown) {
+        //     // Move North
+        //     player.setVelocityY(-speed);
+        //     player.anims.play('move', true);
+        // }
+        // if (keys.A.isDown) {
+        //     // Move West
+        //     player.setVelocityX(-speed);
+        //     player.anims.play('move', true);
+        // }
+        // if (keys.S.isDown) {
+        //     // Move South
+        //     player.setVelocityY(speed);
+        //     player.anims.play('move', true);
+        // }
+        // if (keys.D.isDown) {
+        //     // Move East
+        //     player.setVelocityX(speed);
+        //     player.anims.play('move', true);
+        // }
 
         // Arrow Key Rotation
-        if (arrows.left.isDown) {
+        if (arrows.left.isDown || keys.A.isDown) {
             // Rotate Anti-Clockwise
-            player.setAngle(player.angle - speed / 100);;
+            // player.setAngle(player.angle - speed / 100);
+            player.setAngularVelocity(-300);
             player.anims.play('move', true);
-        } else if (arrows.right.isDown) {
+        } else if (arrows.right.isDown || keys.D.isDown) {
             // Rotate Clockwise
-            player.setAngle(player.angle + speed / 100);;
+            // player.setAngle(player.angle + speed / 100);
+            player.setAngularVelocity(300);
             player.anims.play('move', true);
+        } else {
+            player.setAngularVelocity(0);
+        }
+        if (arrows.up.isDown || keys.W.isDown) {
+            // Move in direction of rotation
+            this.physics.velocityFromRotation(player.rotation, 200, player.body.acceleration);
+            console.log(player.rotation)
+            player.anims.play('move', true);
+        } else {
+            player.setAcceleration(0);
         }
 
         // Player HP Tracks Player
         assets.sharkhp.setX(player.x - (assets.sharkhp.width / 2)).setY(player.y - 50).setText('HP: ' + player.hp + '%');
+
+        // Earth HP Updater
+        assets.earthhp.setText('HP: ' + assets.earth.hp + '%');
+        assets.earthhp.setX(centre.x - assets.earthhp.width / 2);
     };
 </script>
 
