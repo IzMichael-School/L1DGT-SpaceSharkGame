@@ -13,8 +13,11 @@
     "window": {
       "title": "DGT-SpaceSharkGame",
       "maximize": true,
-      "resizable": false,
-      "icon": "/public/favicon.png"
+      "resizable": true,
+      "icon": "/public/favicon.png",
+      "minWidth": 1600,
+      "minHeight": 900,
+      "enableInspector": true
     }
   },
   "cli": {
