@@ -59,6 +59,7 @@
         });
         this.load.image('earth', 'assets/img/earth2.png');
         this.load.image('asteroid', 'assets/img/asteroid.png');
+        this.load.image('star', 'assets/img/star.png');
     };
 
     function create() {
@@ -88,9 +89,9 @@
         });
 
         // Add controls listeners and bindings
-        player.setDamping(true);
-        player.setDrag(0.33);
-        player.setMaxVelocity(200);
+        // player.setDamping(true);
+        player.setDrag(0.13);
+        player.setMaxVelocity(300);
 
         arrows = this.input.keyboard.createCursorKeys();
         
@@ -103,6 +104,11 @@
 
         // Add Asteroids
         assets.asteroids = this.physics.add.group({
+            // key: 'asteroid',
+            // repeat: 15,
+            // setXY: { x: -500, y: -500, stepX: 150 }
+        });
+        assets.stars = this.physics.add.group({
             // key: 'asteroid',
             // repeat: 15,
             // setXY: { x: -500, y: -500, stepX: 150 }
@@ -121,12 +127,14 @@
         setInterval(() => {
             let asteroid = assets.asteroids.create((Math.random() * (500 - (-500) + 1) + -500), -500, 'asteroid');
             this.physics.moveTo(asteroid, centre.x + (Math.random() * (500 - (-500) + 1) + -500), config.height, Math.random() * (300 - 25 + 1) + 25);
-            this.physics.add.overlap(assets.earth, asteroid, (earth, asteroid) => {
-                console.log('bump')
-                assets.earth.hp -= 20;
-                asteroid.disableBody(true, true);
-            }, null, this);
-        }, 1000);
+        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
+        }, 5000);
+
+        setInterval(() => {
+            let star = assets.stars.create(-500, (Math.random() * (500 - (-500) + 1) + -500), 'star');
+            this.physics.moveTo(star, config.width, (Math.random() * (500 - (-500) + 1) + -500), Math.random() * (300 - 25 + 1) + 25);
+        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
+        }, 2500);
 
         // Add HP indicators
         assets.sharkhp = this.add.text(10, 10, 'HP: ' + player.hp + '%').setFontFamily('Nunito Sans').setFontSize(16);
@@ -140,6 +148,15 @@
             player.hp -= 10;
             asteroid.disableBody(true, true);
         }, null, this);
+        this.physics.add.overlap(player, assets.stars, (player, star) => {
+            player.hp += 5;
+            star.disableBody(true, true);
+        }, null, this);
+        // this.physics.add.overlap(assets.earth, assets.asteroids, (earth, asteroid) => {
+        //     console.log('bump')
+        //     assets.earth.hp -= 20;
+        //     asteroid.disableBody(true, true);
+        // }, null, this);
     };
 
     function update() {
