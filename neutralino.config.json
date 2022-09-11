@@ -1,5 +1,5 @@
 {
-  "applicationId": "js.neutralino.zero",
+  "applicationId": "com.izmichael.school.spaceshark",
   "version": "1.0.0",
   "defaultMode": "window",
   "documentRoot": "/public/",
@@ -21,7 +21,7 @@
     }
   },
   "cli": {
-    "binaryName": "svelte",
+    "binaryName": "DGT-SpaceSharkGame",
     "resourcesPath": "/public/",
     "extensionsPath": "/extensions/",
     "clientLibrary": "/public/neutralino.js",
