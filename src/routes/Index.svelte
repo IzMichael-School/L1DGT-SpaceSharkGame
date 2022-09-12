@@ -151,15 +151,17 @@
 
         setInterval(() => {
             let asteroid = assets.asteroids.create((Math.random() * (0 - config.width + 1) + config.width), -500, 'asteroid');
+            asteroid.angle = Math.random() * (360 - 0 + 1) + 0;
             this.physics.moveTo(asteroid, (Math.random() * (0 - (config.width / 2) + 1) + (config.width / 2)) + (config.width / 2), config.height, Math.random() * (200 - 25 + 1) + 25);
         // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
         }, 5000);
 
         setInterval(() => {
             let star = assets.stars.create(-500, (Math.random() * (0 - (config.height) + 1) + config.height), 'star');
+            star.angle = Math.random() * (360 - 0 + 1) + 0;
+            this.physics.moveTo(star, config.width, (Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
             // star.body.collideWorldBounds = true;
             // star.body.bounce.set(1);
-            this.physics.moveTo(star, config.width, (Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
         // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
         }, 2000);
 
@@ -272,6 +274,8 @@
             state = 'earthDeath';
             endGame();
         };
+
+        earth.angle += 1;
     };
 
     function endGame() {
