@@ -88,6 +88,7 @@
         // });
 
         // this.music.play();
+        
         // Create sprites, keyboard listeners, and text displays
         
         // Add simple background for the game
@@ -95,6 +96,7 @@
 
         // Add Earth at the bottom of the viewport 
         earth = this.physics.add.sprite(centre.x, config.height + 1000, 'earth');
+        earth.setCircle(1100);
 
         // The player and its settings
         player = this.physics.add.sprite(centre.x, centre.y, 'shark').setScale(1).refreshBody();
@@ -275,7 +277,7 @@
             endGame();
         };
 
-        earth.angle += 1;
+        earth.angle += 0.1;
     };
 
     function endGame() {
