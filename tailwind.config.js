@@ -13,7 +13,8 @@ module.exports = {
             'hand': ['Patrick Hand'],
             'loop': ['Sacramento'],
             'clean': ['Outfit'],
-            'space': ['Space Quest'],
+            'ranger': ['Space Ranger'],
+            'space': ['Overfield'],
         },
     },
     plugins: []
