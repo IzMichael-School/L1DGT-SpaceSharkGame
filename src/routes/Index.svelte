@@ -4,6 +4,22 @@
 
 <script>
     import Phaser from 'phaser';
+    import { onMount } from 'svelte';
+    // if (!window.Neutralino) {
+        window.Neutralino = {
+            init: () => {
+                return console.log('Running in Browser');
+            },
+            os: {
+                open: (url) => {
+                    return window.location = url;
+                }
+            }
+        };
+    // }
+    onMount(() => {
+        window.Neutralino.init();
+    });
 
     // Initialise Variables
     let gameCanvas,
@@ -72,7 +88,7 @@
 
     function preload() {
         // Import assets
-        this.load.image('space', 'assets/img/space.png');
+        this.load.image('space', 'assets/img/space2.png');
         this.load.spritesheet('shark', 'assets/img/shark-sheet.png', {
             frameWidth: 115/2,
             frameHeight: 30
@@ -364,37 +380,77 @@
     window.addEventListener('keydown',  () => document.querySelector('#game').focus())
 </script>
 
-<div id="mainbox" class="flex flex-row items-center w-screen h-screen overflow-hidden justify-evenly font-space">
+<div id="mainbox" class="flex flex-row items-center w-screen h-screen overflow-hidden select-none justify-evenly font-space">
     <!-- <h1 class="text-4xl font-bold text-white rotate-180 vertical-rl">DGT - Shark Space Game</h1> -->
 
-    <div class:hidden={state != 'menu'} class="flex flex-col items-center justify-center p-10 text-white bg-blue-900 gameBox">
-        <h1 class="text-6xl text-center">Space Shark Game</h1>
-        {#if highscore > 0}<h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>{/if}
+    <div class:hidden={state != 'menu'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+        <div class="flex flex-col items-center justify-center flex-1 w-full">
+            <h1 id="title" class="text-6xl text-center header">Wahi Mango</h1>
+            {#if highscore > 0}<h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>{/if}
 
-        <div class="flex flex-row items-center justify-center w-2/3">
+            <div class="flex flex-row items-center justify-center w-3/4">
+                <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadGame()}>Play Game</button>
+                <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'tutorial'}>How to Play</button>
+            </div>
+        </div>
+
+        <h2 class="text-2xl text-center select-none font-round">&copy; IzMichael 2022 - <span on:click={() => window.Neutralino.os.open('https://izmichael.com')} class="cursor-pointer hover:underline">izmichael.com</span> - <span on:click={() => state = 'credits'} class="cursor-pointer hover:underline">Credits & Attribution</span></h2>
+    </div>
+
+    <div class:hidden={state != 'tutorial'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+        <h1 class="mb-3 text-6xl text-center header">How to Play</h1>
+        <h2 class="mt-5 mb-3 text-2xl text-center font-round">You can use
+             <img src="/assets/img/a.svg" class="inline-block w-8 aspect-square" title="'Letter A' Key" alt="Keyboard Key" />
+             <img src="/assets/img/w.svg" class="inline-block w-8 aspect-square" title="'Letter W' Key" alt="Keyboard Key" />
+             <img src="/assets/img/d.svg" class="inline-block w-8 aspect-square" title="'Letter D' Key" alt="Keyboard Key" />
+             or the
+             <img src="/assets/img/left.svg" class="inline-block w-8 aspect-square" title="'Left Arrow' Key" alt="Keyboard Key" />
+             <img src="/assets/img/up.svg" class="inline-block w-8 aspect-square" title="'Up Arrow' Key" alt="Keyboard Key" />
+             <img src="/assets/img/right.svg" class="inline-block w-8 aspect-square" title="'Right Arrow' Key" alt="Keyboard Key" />
+             arrow keys to move.</h2>
+        <h2 class="mb-3 text-2xl text-center font-round">Your goal is to defend Earth by destroying the asteroids before they hit the planet.</h2>
+        <h2 class="mb-3 text-2xl text-center font-round">When the shark (you) collides with an asteroid, you destroy it.<br>Destroying an asteroid will cause you to lose 10% of your Health Metre.</h2>
+        <h2 class="mb-3 text-2xl text-center font-round">You can regain your health by consuming stars. To consume a star, simply collide with it.<br>Each star will restore 5% of your Health Metre.</h2>
+        <h2 class="mb-3 text-2xl text-center font-round">When an asteroid collides with Earth, Earth will lose 10% of its Health Metre.<br>There is no way to restore Earth's Health Metre.</h2>
+
+        <div class="flex flex-row items-center justify-center w-3/4">
             <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadGame()}>Play Game</button>
-            <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadGame()}>How to Play</button>
+            <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'menu'}>Back to Menu</button>
+        </div>
+    </div>
+
+    <div class:hidden={state != 'credits'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+        <h1 class="text-6xl text-center header">Credits & Attribution</h1>
+        
+        <h2 class="mt-3 text-2xl text-center">Music by <span on:click={() => window.Neutralino.os.open('https://salted.bandcamp.com/album/craftedmusic')} class="cursor-pointer hover:underline font-clean">Salted</span>.</h2>
+        <h2 class="text-2xl text-center">Keyboard Icons from <span on:click={() => window.Neutralino.os.open('https://github.com/q2apro/keyboard-keys-speedflips')} class="cursor-pointer hover:underline font-clean">github.com/q2apro/keyboard-keys-speedflips</span>.</h2>
+        <h2 class="text-2xl text-center">Main Game Space Background by <span on:click={() => window.Neutralino.os.open('https://opengameart.org/content/space-background-7')} class="cursor-pointer hover:underline font-clean">drakzlin</span>.</h2>
+        <h2 class="text-2xl text-center">App Space Background by <span on:click={() => window.Neutralino.os.open('https://opengameart.org/content/space-background-7')} class="cursor-pointer hover:underline font-clean">drakzlin</span>.</h2>
+
+        <div class="flex flex-row items-center justify-center w-3/4">
+            <!-- svelte-ignore missing-declaration -->
+            <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'menu'}>Back to Menu</button>
         </div>
     </div>
 
     {#if killCanvas != true}
-    <canvas id="game" class:hidden={state != 'game'} class="gameBox" bind:this={gameCanvas}></canvas>
+    <canvas id="game" class:hidden={state != 'game'} class="bg-blue-900 gameBox" bind:this={gameCanvas}></canvas>
     {/if}
 
-    <div class:hidden={state != 'playerDeath'} class="flex flex-col items-center justify-center p-10 text-white bg-blue-900 gameBox">
-        <h1 class="text-6xl text-center">You Died!</h1>
+    <div class:hidden={state != 'playerDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+        <h1 class="text-6xl text-center header">You Died!</h1>
         <h2 class="mb-5 text-4xl text-center">You defended the earth, but at great personal cost...</h2>
         <h2 class="text-4xl text-center">You survived for {formatSecs(timerVal, true)}.</h2>
         <h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>
-        <button class="p-3 px-24 mt-5 text-lg bg-green-400 rounded-xl" on:click={() => refresh()}>Play Again</button>
+        <button class="p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 
-    <div class:hidden={state != 'earthDeath'} class="flex flex-col items-center justify-center p-10 text-white bg-blue-900 gameBox">
-        <h1 class="text-6xl text-center">You Failed!</h1>
+    <div class:hidden={state != 'earthDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+        <h1 class="text-6xl text-center header">You Failed!</h1>
         <h2 class="mb-5 text-4xl text-center">You failed to defend the earth from asteroids...</h2>
         <h2 class="text-4xl text-center">You survived for {formatSecs(timerVal, true)}.</h2>
         <h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>
-        <button class="p-3 px-24 mt-5 text-lg bg-green-400 rounded-xl" on:click={() => refresh()}>Play Again</button>
+        <button class="p-3 px-24 mt-5 text-lg bg-green-400 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 </div>
 
@@ -403,17 +459,14 @@
         writing-mode: vertical-rl;
     } */
 
-    #mainbox {
-        /* background-color: #141931; */
-        background-image: url('/assets/img/space.gif');
+    /* #mainbox {
+        background-image: url('/assets/img/space2.png');
         background-position: center;
         background-repeat: no-repeat;
-        /* background-repeat: repeat; */
         background-size: cover;
-        /* background-size: 50%; */
-    }
+    } */
 
-    /* #mainbox {
+    #mainbox {
         position: relative;
         overflow: hidden;
     }
@@ -421,17 +474,20 @@
     #mainbox::before {
         content: "";
         position: absolute;
-        width: 150vw;
-        height: 150vw;
-        top: -50%;
-        left: -50%;
+        width: 120%;
+        aspect-ratio: 1 / 1;
         z-index: -1;
-        background-image: url('/assets/img/space.png');
+        background-image: url('/assets/img/space2.png');
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-        transform: rotate(-30deg);
-    } */
+        animation: spin infinite 500s linear;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
 
     .gameBox {
         width: 1200px;
