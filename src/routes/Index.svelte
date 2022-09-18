@@ -130,10 +130,13 @@
         // The asteroid explosion animation
         this.anims.create({
             key: 'asteroid_explosion',
-            frames: this.anims.generateFrameNumbers('asteroid', {
+            frames: [...this.anims.generateFrameNumbers('asteroid', {
                 start: 0,
                 end: 8
-            }),
+            }), ...this.anims.generateFrameNumbers('asteroid', {
+                start: 8,
+                end: 0
+            }), ],
             frameRate: 10,
             repeat: 1
         });
@@ -372,7 +375,7 @@
 <div id="mainbox" class="flex flex-row items-center w-screen h-screen overflow-hidden select-none justify-evenly font-space">
     <!-- <h1 class="text-4xl font-bold text-white rotate-180 vertical-rl">DGT - Shark Space Game</h1> -->
 
-    <div class:hidden={state != 'menu'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+    <div class:hidden={state != 'menu'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <div class="flex flex-col items-center justify-center flex-1 w-full">
             <h1 id="title" class="text-6xl text-center header">Wahi Mango</h1>
             {#if highscore > 0}<h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>{/if}
@@ -386,7 +389,7 @@
         <h2 class="text-2xl text-center select-none font-round">&copy; IzMichael 2022 - <a href="https://izmichael.com" class="cursor-pointer hover:underline">izmichael.com</a> - <span on:click={() => state = 'credits'} class="cursor-pointer hover:underline">Credits & Attribution</span></h2>
     </div>
 
-    <div class:hidden={state != 'tutorial'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+    <div class:hidden={state != 'tutorial'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="mb-3 text-6xl text-center header">How to Play</h1>
         <h2 class="mt-5 mb-3 text-2xl text-center font-round">You can use
              <img src="/assets/img/a.svg" class="inline-block w-8 aspect-square" title="'Letter A' Key" alt="Keyboard Key" />
@@ -408,7 +411,7 @@
         </div>
     </div>
 
-    <div class:hidden={state != 'credits'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+    <div class:hidden={state != 'credits'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">Credits & Attribution</h1>
         
         <h2 class="mt-3 text-2xl text-center">Music by <a href="https://salted.bandcamp.com/album/craftedmusic" class="cursor-pointer hover:underline font-clean">Salted</a>.</h2>
@@ -423,10 +426,10 @@
     </div>
 
     {#if killCanvas != true}
-    <canvas id="game" class:hidden={state != 'game'} class="bg-blue-900 gameBox" bind:this={gameCanvas}></canvas>
+    <canvas id="game" class:hidden={state != 'game'} class="bg-blue-800 gameBox" bind:this={gameCanvas}></canvas>
     {/if}
 
-    <div class:hidden={state != 'playerDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+    <div class:hidden={state != 'playerDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">You Died!</h1>
         <h2 class="mb-5 text-4xl text-center">You defended the earth, but at great personal cost...</h2>
         <h2 class="text-4xl text-center">You survived for {formatSecs(timerVal, true)}.</h2>
@@ -434,7 +437,7 @@
         <button class="p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 
-    <div class:hidden={state != 'earthDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
+    <div class:hidden={state != 'earthDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">You Failed!</h1>
         <h2 class="mb-5 text-4xl text-center">You failed to defend the earth from asteroids...</h2>
         <h2 class="text-4xl text-center">You survived for {formatSecs(timerVal, true)}.</h2>
