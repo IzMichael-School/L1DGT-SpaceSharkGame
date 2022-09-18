@@ -1,0 +1,32 @@
+{
+  "name": "dgt-spacesharkgame",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "start": "sirv public -s --no-clear --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.25.2",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.0",
+    "autoprefixer": "^10.4.2",
+    "concurrently": "^7.3.0",
+    "postcss": "^8.4.5",
+    "postcss-load-config": "^3.1.0",
+    "rollup": "^2.3.4",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^7.0.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "svelte": "^3.0.0",
+    "svelte-preprocess": "^4.9.8",
+    "tailwindcss": "^3.0.15"
+  },
+  "dependencies": {
+    "phaser": "^3.55.2",
+    "sirv-cli": "^1.0.0",
+    "svelte-router-spa": "^6.0.3"
+  }
+}
