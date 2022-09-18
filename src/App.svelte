@@ -67,7 +67,9 @@
         state = 'game';
         // Start Stopwatch
         timer = setInterval(() => {
-            timerVal ++;
+            if (!document.hidden) {
+                timerVal ++;
+            };
         }, 1000)
     };
 
@@ -178,22 +180,26 @@
         // }, null, this);
 
         setInterval(() => {
-            let asteroid = assets.asteroids.create((Math.random() * (0 - config.width + 1) + config.width), -500, 'asteroid');
-            asteroid.angle = Math.random() * (360 - 0 + 1) + 0;
-            this.physics.moveTo(asteroid, (Math.random() * (0 - (config.width / 2) + 1) + (config.width / 2)) + (config.width / 2), config.height, Math.random() * (200 - 25 + 1) + 25);
-            // asteroid.anims.play('asteroid_move', true);
-        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
+            if (!document.hidden) {
+                let asteroid = assets.asteroids.create((Math.random() * (0 - config.width + 1) + config.width), -500, 'asteroid');
+                asteroid.angle = Math.random() * (360 - 0 + 1) + 0;
+                this.physics.moveTo(asteroid, (Math.random() * (0 - (config.width / 2) + 1) + (config.width / 2)) + (config.width / 2), config.height, Math.random() * (200 - 25 + 1) + 25);
+                // asteroid.anims.play('asteroid_move', true);
+            }
         }, 5000);
+        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
 
         setInterval(() => {
-            let star = assets.stars.create(-500, (Math.random() * (0 - (config.height) + 1) + config.height), 'star');
-            star.angle = Math.random() * (360 - 0 + 1) + 0;
-            this.physics.moveTo(star, config.width, (Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
-            // star.anims.play('star_move', true);
-            // star.body.collideWorldBounds = true;
-            // star.body.bounce.set(1);
-        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
+            if (!document.hidden) {
+                let star = assets.stars.create(-500, (Math.random() * (0 - (config.height) + 1) + config.height), 'star');
+                star.angle = Math.random() * (360 - 0 + 1) + 0;
+                this.physics.moveTo(star, config.width, (Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
+                // star.anims.play('star_move', true);
+                // star.body.collideWorldBounds = true;
+                // star.body.bounce.set(1);
+            }
         }, 2000);
+        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
 
         // Add HP indicators
         assets.sharkhp = this.add.text(10, 10, 'HP: ' + player.hp + '%').setFontFamily('Overfield').setFontSize(16);
@@ -247,7 +253,7 @@
         ready = true;
     };
 
-    function update() {
+    function update() {        
         // WASD Movement
         // player.setVelocityX(0);
         // player.setVelocityY(0);
@@ -325,7 +331,7 @@
             endGame();
         };
 
-        earth.angle += 0.1;
+        earth.angle += 0.02;
     };
 
     function endGame() {
@@ -337,6 +343,23 @@
         // Store High Score
         if (timerVal > highscore) {
             highscore = timerVal;
+        };
+    };
+
+    let cutsceneShot = 'none';
+    async function loadCutscene() {
+        let shots = [0, 1, 2, 3];
+        state = 'cutscene';
+        for (const i of shots) {
+            if (state == 'cutscene') {
+                cutsceneShot = i;
+                await sleep(10);
+            };
+        };
+        if (state == 'cutscene') {
+            cutsceneShot = 'none';
+            await sleep(1);
+            loadGame();
         };
     };
 
@@ -381,7 +404,7 @@
             {#if highscore > 0}<h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>{/if}
 
             <div class="flex flex-row items-center justify-center w-3/4">
-                <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadGame()}>Play Game</button>
+                <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadCutscene()}>Play Game</button>
                 <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'tutorial'}>How to Play</button>
             </div>
         </div>
@@ -428,6 +451,30 @@
     {#if killCanvas != true}
     <canvas id="game" class:hidden={state != 'game'} class="bg-blue-800 gameBox" bind:this={gameCanvas}></canvas>
     {/if}
+    
+    <div class:hidden={state != 'cutscene'} class="relative flex flex-col items-center justify-center overflow-hidden text-white bg-gray-900 gameBox" on:click={async () => { cutsceneShot = 'none'; await sleep(1); loadGame(); }}>
+        <div class:opacity-0={cutsceneShot != 0} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
+            <img src="./assets/img/cutscene1.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 1">
+            <h1 class="p-10 text-2xl text-center font-round">Long ago, on an island quite close to here, there lived a group of people. These people were the Māori.</h1>
+        </div>
+
+        <div class:opacity-0={cutsceneShot != 1} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
+            <img src="./assets/img/cutscene2.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 2">
+            <h1 class="p-10 text-2xl text-center font-round">The Māori were afraid that their Earth could be harmed by things like stars and asteroids, and didn't know what to do.</h1>
+        </div>
+
+        <div class:opacity-0={cutsceneShot != 2} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
+            <img src="./assets/img/cutscene3.gif" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 3">
+            <h1 class="p-10 text-2xl text-center font-round">Until one day, when the Demigod Maui had an idea. Maui proposed that they send a shark, Māngōroa, into space to protect the tribes back on earth.</h1>
+        </div>
+
+        <div class:opacity-0={cutsceneShot != 3} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
+            <img src="./assets/img/cutscene4.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 4">
+            <h1 class="p-10 text-2xl text-center font-round">And so they did, and Māngōroa is still up in space today, protecting the Earth from anything that may cause it harm.</h1>
+        </div>
+
+        <p class:opacity-0={cutsceneShot == 'none'} class="absolute bottom-0 right-0 z-50 p-2 text-sm italic text-gray-500">Click anywhere to skip</p>
+    </div>
 
     <div class:hidden={state != 'playerDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">You Died!</h1>
@@ -491,6 +538,7 @@
 
     .gameBox {
         width: 1200px;
+        max-height: 675px;
         /* height: 675px; */
         /* height: 100%; */
         aspect-ratio: 16 / 9;
