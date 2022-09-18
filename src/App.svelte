@@ -494,7 +494,7 @@
         /* height: 675px; */
         /* height: 100%; */
         aspect-ratio: 16 / 9;
-        border-radius: 1rem;
+        border-radius: 0.75rem;
         @apply border-4 border-gray-400 shadow-xl;
     }
 </style>
