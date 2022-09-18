@@ -54,7 +54,7 @@ test('Fonts are loading correctly', async ({page}) => {
 
     const creditsBtn = page.locator('span >> text="Credits & Attribution" >> visible=true');
     await creditsBtn.click();
-    await expect(page.locator('.header >> text="Credits & Attribution"')).toBeVisible();
+    await expect(page.locator('a >> text="Salted"')).toBeVisible();
     await expect(await page.evaluate(async () => { return document.fonts.check('24px Outfit'); })).toBeTruthy();
     await page.close();
 
