@@ -43,6 +43,7 @@ test('Do the controls work?', async ({ page }) => {
     await page.screenshot({ path: 'test-artefacts/bottom-right.png' });
 
     await sleep(1);
+    await page.close();
 });
 
 async function resetGame(page) {
@@ -70,6 +71,7 @@ test('Do the asteroids damage earth?', async ({ page }) => {
 
     await expect(page.locator('.header >> text="You Failed!"')).toBeVisible();
     await sleep(1);
+    await page.close();
 });
 
 function sleep(s) {

@@ -27,7 +27,7 @@ test('Main Menu has title, all buttons, footer white-label; buttons must be func
     const creatorAttr = page.locator('h2 >> text="© IzMichael 2022 - " >> visible=true');
     await expect(creatorAttr).toBeVisible();
 
-    const creatorLink = page.locator('span >> text="izmichael.com" >> visible=true');
+    const creatorLink = page.locator('a >> text="izmichael.com" >> visible=true');
     await expect(creatorLink).toBeVisible();
     await creatorLink.click();
     await expect(page).toHaveURL(/izmichael.com/);
@@ -37,7 +37,7 @@ test('Main Menu has title, all buttons, footer white-label; buttons must be func
     await expect(playBtn).toBeVisible();
     await playBtn.click();
     await expect(page.locator('canvas#game')).toBeVisible();
-    await page.reload();
+    await page.close();
 });
 
 async function backToMenu(page) {
@@ -56,6 +56,7 @@ test('Have fonts loaded correctly?', async ({page}) => {
     await creditsBtn.click();
     await expect(page.locator('.header >> text="Credits & Attribution"')).toBeVisible();
     await expect(await page.evaluate(async () => { return document.fonts.check('24px Outfit'); })).toBeTruthy();
+    await page.close();
 
     await backToMenu(page);
 });
