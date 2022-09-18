@@ -377,7 +377,7 @@
 
     <div class:hidden={state != 'menu'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <div class="flex flex-col items-center justify-center flex-1 w-full">
-            <h1 id="title" class="text-6xl text-center header">Wahi Mango</h1>
+            <h1 id="title" class="text-6xl text-center header">W<span class="border-t-8 border-white">a</span>hi Mango</h1>
             {#if highscore > 0}<h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>{/if}
 
             <div class="flex flex-row items-center justify-center w-3/4">
