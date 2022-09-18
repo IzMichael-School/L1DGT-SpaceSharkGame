@@ -46,7 +46,7 @@ test('Do the controls work?', async ({ page }) => {
 });
 
 async function resetGame(page) {
-    await page.goto('http://localhost:5000/');
+    await page.goto('/');
     const playBtn = page.locator('button >> text="Play Game" >> visible=true');
     await expect(playBtn).toBeVisible();
     await playBtn.click();
