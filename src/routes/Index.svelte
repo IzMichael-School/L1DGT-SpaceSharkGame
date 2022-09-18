@@ -19,13 +19,17 @@
     // }
     onMount(() => {
         window.Neutralino.init();
+        console.log(window.location)
     });
+
+    
 
     // Initialise Variables
     let gameCanvas,
         state = 'menu',
         killCanvas = false,
         game,
+        ready = false,
         music,
         timer,
         timerVal = 0,
@@ -108,6 +112,8 @@
     };
 
     function create() {
+        ready = false;
+
         // Music
         // Play first song
         playBgm();
@@ -253,6 +259,8 @@
                 asteroid.disableBody(true, true);
             }, null, this);
         }, null, this);
+
+        ready = true;
     };
 
     function update() {
@@ -409,7 +417,7 @@
              <img src="/assets/img/right.svg" class="inline-block w-8 aspect-square" title="'Right Arrow' Key" alt="Keyboard Key" />
              arrow keys to move.</h2>
         <h2 class="mb-3 text-2xl text-center font-round">Your goal is to defend Earth by destroying the asteroids before they hit the planet.</h2>
-        <h2 class="mb-3 text-2xl text-center font-round">When the shark (you) collides with an asteroid, you destroy it.<br>Destroying an asteroid will cause you to lose 10% of your Health Metre.</h2>
+        <h2 class="mb-3 text-2xl text-center font-round">When Māngōroa (you, the shark) collides with an asteroid, you destroy it.<br>Destroying an asteroid will cause you to lose 10% of your Health Metre.</h2>
         <h2 class="mb-3 text-2xl text-center font-round">You can regain your health by consuming stars. To consume a star, simply collide with it.<br>Each star will restore 5% of your Health Metre.</h2>
         <h2 class="mb-3 text-2xl text-center font-round">When an asteroid collides with Earth, Earth will lose 10% of its Health Metre.<br>There is no way to restore Earth's Health Metre.</h2>
 
@@ -452,6 +460,10 @@
         <h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>
         <button class="p-3 px-24 mt-5 text-lg bg-green-400 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
+
+    {#if ready == true}
+        <p class="hidden" id="readyState">Ready: {ready}</p>
+    {/if}
 </div>
 
 <style>
@@ -474,7 +486,7 @@
     #mainbox::before {
         content: "";
         position: absolute;
-        width: 120%;
+        width: 120vw;
         aspect-ratio: 1 / 1;
         z-index: -1;
         background-image: url('/assets/img/space2.png');
