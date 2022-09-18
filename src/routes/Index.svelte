@@ -4,26 +4,7 @@
 
 <script>
     import Phaser from 'phaser';
-    import { onMount } from 'svelte';
-    // if (!window.Neutralino) {
-        window.Neutralino = {
-            init: () => {
-                return console.log('Running in Browser');
-            },
-            os: {
-                open: (url) => {
-                    return window.location = url;
-                }
-            }
-        };
-    // }
-    onMount(() => {
-        window.Neutralino.init();
-        console.log(window.location)
-    });
-
     
-
     // Initialise Variables
     let gameCanvas,
         state = 'menu',
@@ -402,7 +383,7 @@
             </div>
         </div>
 
-        <h2 class="text-2xl text-center select-none font-round">&copy; IzMichael 2022 - <span on:click={() => window.Neutralino.os.open('https://izmichael.com')} class="cursor-pointer hover:underline">izmichael.com</span> - <span on:click={() => state = 'credits'} class="cursor-pointer hover:underline">Credits & Attribution</span></h2>
+        <h2 class="text-2xl text-center select-none font-round">&copy; IzMichael 2022 - <a href="https://izmichael.com" class="cursor-pointer hover:underline">izmichael.com</a> - <span on:click={() => state = 'credits'} class="cursor-pointer hover:underline">Credits & Attribution</span></h2>
     </div>
 
     <div class:hidden={state != 'tutorial'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
@@ -430,10 +411,10 @@
     <div class:hidden={state != 'credits'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-900 gameBox">
         <h1 class="text-6xl text-center header">Credits & Attribution</h1>
         
-        <h2 class="mt-3 text-2xl text-center">Music by <span on:click={() => window.Neutralino.os.open('https://salted.bandcamp.com/album/craftedmusic')} class="cursor-pointer hover:underline font-clean">Salted</span>.</h2>
-        <h2 class="text-2xl text-center">Keyboard Icons from <span on:click={() => window.Neutralino.os.open('https://github.com/q2apro/keyboard-keys-speedflips')} class="cursor-pointer hover:underline font-clean">github.com/q2apro/keyboard-keys-speedflips</span>.</h2>
-        <h2 class="text-2xl text-center">Main Game Space Background by <span on:click={() => window.Neutralino.os.open('https://opengameart.org/content/space-background-7')} class="cursor-pointer hover:underline font-clean">drakzlin</span>.</h2>
-        <h2 class="text-2xl text-center">App Space Background by <span on:click={() => window.Neutralino.os.open('https://opengameart.org/content/space-background-7')} class="cursor-pointer hover:underline font-clean">drakzlin</span>.</h2>
+        <h2 class="mt-3 text-2xl text-center">Music by <a href="https://salted.bandcamp.com/album/craftedmusic" class="cursor-pointer hover:underline font-clean">Salted</a>.</h2>
+        <h2 class="text-2xl text-center">Keyboard Icons from <a href="https://github.com/q2apro/keyboard-keys-speedflips" class="cursor-pointer hover:underline font-clean">github.com/q2apro/keyboard-keys-speedflips</a>.</h2>
+        <h2 class="text-2xl text-center">Main Game Space Background by <a href="https://opengameart.org/content/space-background-7" class="cursor-pointer hover:underline font-clean">drakzlin</a>.</h2>
+        <h2 class="text-2xl text-center">App Space Background by <a href="https://opengameart.org/content/space-background-7" class="cursor-pointer hover:underline font-clean">drakzlin</a>.</h2>
 
         <div class="flex flex-row items-center justify-center w-3/4">
             <!-- svelte-ignore missing-declaration -->
