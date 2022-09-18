@@ -1,7 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 
-test('Do the controls work?', async ({ page }) => {
+test('Controls are functional', async ({ page }) => {
     await resetGame(page);
 
     await page.keyboard.down('A');
@@ -59,7 +59,7 @@ async function resetGame(page) {
     return true;
 };
 
-test('Do the asteroids damage earth?', async ({ page }) => {
+test('Asteroids are successfully damaging earth', async ({ page }) => {
     await resetGame(page);
 
     await page.keyboard.down('D');

@@ -46,7 +46,7 @@ async function backToMenu(page) {
     await backBtn.click();
 };
 
-test('Have fonts loaded correctly?', async ({page}) => {
+test('Fonts are loading correctly', async ({page}) => {
     await page.goto('/');
 
     await expect(await page.evaluate(async () => { return document.fonts.check('24px Nunito'); })).toBeTruthy();
