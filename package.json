@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "rollup -c && neu build --release",
-        "update": "npm install && neu update",
-        "dev": "concurrently --kill-others \"rollup -c -w\" \"neu run --frontend-lib-dev\"",
+        "build": "rollup -c",
+        "update": "npm install",
+        "dev": "rollup -c -w",
         "start": "sirv public -s --no-clear --host 0.0.0.0"
     },
     "devDependencies": {
