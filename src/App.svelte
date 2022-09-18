@@ -441,6 +441,7 @@
         <h2 class="text-2xl text-center">Keyboard Icons from <a href="https://github.com/q2apro/keyboard-keys-speedflips" class="cursor-pointer hover:underline font-clean">github.com/q2apro/keyboard-keys-speedflips</a>.</h2>
         <h2 class="text-2xl text-center">Main Game Space Background by <a href="https://opengameart.org/content/space-background-7" class="cursor-pointer hover:underline font-clean">drakzlin</a>.</h2>
         <h2 class="text-2xl text-center">App Space Background by <a href="https://opengameart.org/content/space-background-7" class="cursor-pointer hover:underline font-clean">drakzlin</a>.</h2>
+        <h2 class="text-2xl text-center">Ocean Cutscene Background by <a href="https://opengameart.org/content/ocean-background" class="cursor-pointer hover:underline font-clean">KnoblePersona</a>.</h2>
 
         <div class="flex flex-row items-center justify-center w-3/4">
             <!-- svelte-ignore missing-declaration -->
@@ -452,7 +453,7 @@
     <canvas id="game" class:hidden={state != 'game'} class="bg-blue-800 gameBox" bind:this={gameCanvas}></canvas>
     {/if}
     
-    <div class:hidden={state != 'cutscene'} class="relative flex flex-col items-center justify-center overflow-hidden text-white bg-gray-900 gameBox" on:click={async () => { cutsceneShot = 'none'; await sleep(1); loadGame(); }}>
+    <div class:hidden={state != 'cutscene'} id="cutsceneWrapper" class="relative flex flex-col items-center justify-center overflow-hidden text-white bg-gray-900 gameBox" on:click={async () => { cutsceneShot = 'none'; await sleep(1); loadGame(); }}>
         <div class:opacity-0={cutsceneShot != 0} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
             <img src="./assets/img/cutscene1.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 1">
             <h1 class="p-10 text-2xl text-center font-round">Long ago, on an island quite close to here, there lived a group of people. These people were the Māori.</h1>
