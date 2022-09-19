@@ -181,9 +181,9 @@
 
         setInterval(() => {
             if (!document.hidden) {
-                let asteroid = assets.asteroids.create((Math.random() * (0 - config.width + 1) + config.width), -500, 'asteroid');
+                let asteroid = assets.asteroids.create(Math.floor(Math.random() * (0 - config.width + 1)) + config.width, -500, 'asteroid');
                 asteroid.angle = Math.random() * (360 - 0 + 1) + 0;
-                this.physics.moveTo(asteroid, (Math.random() * (0 - (config.width / 2) + 1) + (config.width / 2)) + (config.width / 2), config.height, Math.random() * (200 - 25 + 1) + 25);
+                this.physics.moveTo(asteroid, Math.floor(Math.random() * (0 - (config.width / 2) + 1) + (config.width / 2)) + (config.width / 2), config.height, Math.random() * (200 - 25 + 1) + 25);
                 // asteroid.anims.play('asteroid_move', true);
             }
         }, 5000);
@@ -191,9 +191,9 @@
 
         setInterval(() => {
             if (!document.hidden) {
-                let star = assets.stars.create(-500, (Math.random() * (0 - (config.height) + 1) + config.height), 'star');
+                let star = assets.stars.create(-500, Math.floor(Math.random() * (0 - config.height + 1)) + config.height, 'star');
                 star.angle = Math.random() * (360 - 0 + 1) + 0;
-                this.physics.moveTo(star, config.width, (Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
+                this.physics.moveTo(star, config.width, Math.floor(Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
                 // star.anims.play('star_move', true);
                 // star.body.collideWorldBounds = true;
                 // star.body.bounce.set(1);
@@ -429,7 +429,7 @@
         <h2 class="mb-3 text-2xl text-center font-round">When an asteroid collides with Earth, Earth will lose 10% of its Health Metre.<br>There is no way to restore Earth's Health Metre.</h2>
 
         <div class="flex flex-row items-center justify-center w-3/4">
-            <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadGame()}>Play Game</button>
+            <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadCutscene()}>Play Game</button>
             <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'menu'}>Back to Menu</button>
         </div>
     </div>
@@ -444,7 +444,6 @@
         <h2 class="text-2xl text-center">Ocean Cutscene Background by <a href="https://opengameart.org/content/ocean-background" class="cursor-pointer hover:underline font-clean">KnoblePersona</a>.</h2>
 
         <div class="flex flex-row items-center justify-center w-3/4">
-            <!-- svelte-ignore missing-declaration -->
             <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'menu'}>Back to Menu</button>
         </div>
     </div>
