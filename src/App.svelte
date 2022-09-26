@@ -32,6 +32,7 @@
     // Save highscore to browser storage when local variable updated
     $: window.localStorage.setItem('highscore', highscore);
 
+    // Prepare Canvas, Phaser Object, Start Stopwatch, Start Event Loop
     function loadGame() {
         endGame();
         state = 'loading';
@@ -75,6 +76,7 @@
         }, 1000)
     };
 
+    // Preload Assets before first Render
     function preload() {
         // Load Background
         this.load.image('space', './assets/img/space2.png');
@@ -97,6 +99,7 @@
         this.load.audio('burglar_theme', './assets/audio/salted-burglar_theme.mp3');
     };
 
+    // Instantiate sprites, loops, control listeners
     function create() {
         ready = false;
 
@@ -201,6 +204,7 @@
         ready = true;
     };
 
+    // My event loop, runs as soon as it finishes (approx 12.5ms)
     function update() {        
         // WASD Movement (Unused, saved just incase)
         // player.setVelocityX(0);
