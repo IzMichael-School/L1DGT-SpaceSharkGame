@@ -21,6 +21,7 @@
         player,
         earth,
         arrows,
+        stats = { stars: 0, deflections: 0, misses: 0 },
         keys = {
             A: undefined,
             S: undefined,
@@ -178,18 +179,21 @@
             // When Player collides with asteroid, reduce Player HP and delete asteroid
             this.physics.add.overlap(player, assets.asteroids, async (player, asteroid) => {
                 player.hp -= 10;
+                stats.deflections ++;
                 asteroid.disableBody(true, true);
             }, null, this);
             
             // When Player collides with star, increase Player HP and delete star
             this.physics.add.overlap(player, assets.stars, async (player, star) => {
                 player.hp += 5;
+                stats.stars ++;
                 star.disableBody(true, true);
             }, null, this);
 
             // When asteroid collides with earth, reduce earth HP and delete asteroid
             this.physics.add.overlap(earth, assets.asteroids, async (earth, asteroid) => {
                 earth.hp -= 10;
+                stats.misses ++;
                 asteroid.disableBody(true, true);
             }, null, this);
         }, null, this);
@@ -456,6 +460,8 @@
         <h2 class="mb-5 text-4xl text-center">You defended the earth, but at great personal cost...</h2>
         <h2 class="text-4xl text-center">You survived for {formatSecs(timerVal, true)}.</h2>
         <h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>
+        <h2 class="text-4xl text-center">You collected {stats.stars} stars.</h2>
+        <h2 class="text-4xl text-center">You deflected {stats.deflections} asteroids, but missed {stats.misses}.</h2>
         <button class="p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 
@@ -465,6 +471,8 @@
         <h2 class="mb-5 text-4xl text-center">You failed to defend the earth from asteroids...</h2>
         <h2 class="text-4xl text-center">You survived for {formatSecs(timerVal, true)}.</h2>
         <h2 class="text-4xl text-center">Your high score is {formatSecs(highscore, true)}.</h2>
+        <h2 class="text-4xl text-center">You collected {stats.stars} stars.</h2>
+        <h2 class="text-4xl text-center">You deflected {stats.deflections} asteroids, but missed {stats.misses}.</h2>
         <button class="p-3 px-24 mt-5 text-lg bg-green-400 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 
