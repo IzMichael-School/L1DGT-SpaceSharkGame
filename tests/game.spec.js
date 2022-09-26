@@ -42,22 +42,9 @@ test('Controls are functional', async ({ page }) => {
     await page.keyboard.up('W');
     await page.screenshot({ path: 'test-artefacts/bottom-right.png' });
 
-    await sleep(1);
+    await sleep(0.5);
     await page.close();
 });
-
-async function resetGame(page) {
-    await page.goto('/');
-    const playBtn = page.locator('button >> text="Play Game" >> visible=true');
-    await expect(playBtn).toBeVisible();
-    await playBtn.click();
-
-    await expect(page.locator('canvas#game')).toBeVisible();
-    await expect(page.locator('#readyState')).toHaveText('Ready: true');
-
-    await sleep(0.5);
-    return true;
-};
 
 test('Asteroids are successfully damaging earth', async ({ page }) => {
     await resetGame(page);
@@ -70,9 +57,26 @@ test('Asteroids are successfully damaging earth', async ({ page }) => {
     await page.keyboard.up('W');
 
     await expect(page.locator('.header >> text="You Failed!"')).toBeVisible();
-    await sleep(1);
+    await sleep(0.5);
     await page.close();
 });
+
+async function resetGame(page) {
+    await page.goto('/');
+    const playBtn = page.locator('button >> text="Play Game" >> visible=true');
+    await expect(playBtn).toBeVisible();
+    await playBtn.click();
+
+    const cutsceneWrapper = page.locator('#cutsceneWrapper');
+    await expect(cutsceneWrapper).toBeVisible();
+    cutsceneWrapper.click();
+
+    await expect(page.locator('canvas#game')).toBeVisible();
+    await expect(page.locator('#readyState')).toHaveText('Ready: true');
+
+    await sleep(0.5);
+    return true;
+};
 
 function sleep(s) {
     return new Promise(resolve => setTimeout(resolve, (s * 1000)));

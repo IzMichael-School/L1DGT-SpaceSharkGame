@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>DGT-SpaceSharkGame</title>
+    <title>DGT - Wāhi Mango</title>
 </svelte:head>
 
 <script>
@@ -28,6 +28,7 @@
             W: undefined
         };
 
+    // Save highscore to browser storage when local variable updated
     $: window.localStorage.setItem('highscore', highscore);
 
     function loadGame() {
@@ -43,7 +44,6 @@
             height: (1200 / 16) * 9,
             canvas: gameCanvas,
             type: 'webgl',
-            // id: 'game',
             physics: {
                 default: 'arcade',
                 arcade: {
@@ -67,6 +67,7 @@
         state = 'game';
         // Start Stopwatch
         timer = setInterval(() => {
+            // If Page is visible, increment timer by 1 second
             if (!document.hidden) {
                 timerVal ++;
             };
@@ -74,20 +75,21 @@
     };
 
     function preload() {
-        // Import assets
+        // Load Background
         this.load.image('space', './assets/img/space2.png');
+        
+        // Load Player Asset
         this.load.spritesheet('shark', './assets/img/shark-sheet.png', {
             frameWidth: 115/2,
             frameHeight: 30
         });
+
+        // Load environment, boost, and enemy assets
         this.load.image('earth', './assets/img/earth2.png');
-        // this.load.image('asteroid', './assets/img/asteroid.png');
-        this.load.spritesheet('asteroid', './assets/img/asteroid-sheet.png', {
-            frameWidth: 1040/8,
-            frameHeight: 130
-        });
+        this.load.image('asteroid', './assets/img/asteroid.png');
         this.load.image('star', './assets/img/star.png');
 
+        // Load track list
         this.load.audio('fanfare_dans_lusine', './assets/audio/salted-fanfare_dans_lusine.mp3');
         this.load.audio('castles_wars', './assets/audio/salted-castles_wars.mp3');
         this.load.audio('traps', './assets/audio/salted-traps.mp3');
@@ -97,13 +99,10 @@
     function create() {
         ready = false;
 
-        // Music
         // Play first song
         playBgm();
         // Detect song end, play next song
         music.on('complete', () => playBgm());
-        
-        // Create sprites, keyboard listeners, and text displays
         
         // Add simple background for the game
         assets.spacebg = this.add.image(centre.x, centre.y, 'space').setScale(0.5);
@@ -112,7 +111,7 @@
         earth = this.physics.add.sprite(centre.x, config.height + 1000, 'earth');
         earth.setCircle(1100);
 
-        // The player and its settings
+        // The player and its initial settings
         player = this.physics.add.sprite(centre.x, centre.y, 'shark').setScale(1).refreshBody();
         player.setCollideWorldBounds(true);
         player.setAngle(0);
@@ -129,77 +128,40 @@
             repeat: 1
         });
 
-        // The asteroid explosion animation
-        this.anims.create({
-            key: 'asteroid_explosion',
-            frames: [...this.anims.generateFrameNumbers('asteroid', {
-                start: 0,
-                end: 8
-            }), ...this.anims.generateFrameNumbers('asteroid', {
-                start: 8,
-                end: 0
-            }), ],
-            frameRate: 10,
-            repeat: 1
-        });
-
-        // Add controls listeners and bindings
+        // Set motion drift and velocity settings
         player.setDamping(true);
         player.setDrag(0.01);
         player.setMaxVelocity(400);
 
+        // Add arrow key listeners
         arrows = this.input.keyboard.createCursorKeys();
         
+        // Add WAD key listeners
         keys.A = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        keys.S = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keys.D = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keys.W = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
-        game.input.mouse.capture = 'true';
-
-        // Add Asteroids
-        assets.asteroids = this.physics.add.group({
-            // key: 'asteroid',
-            // repeat: 15,
-            // setXY: { x: -500, y: -500, stepX: 150 }
-        });
-        assets.stars = this.physics.add.group({
-            // key: 'asteroid',
-            // repeat: 15,
-            // setXY: { x: -500, y: -500, stepX: 150 }
-        });
-        // this.time.delayedCall(1000, () => {
-        //     assets.asteroids.children.entries.forEach(asteroid => {
-        //         this.physics.moveTo(asteroid, centre.x + (Math.random() * (500 - (-500) + 1) + -500), config.height, Math.random() * (300 - 25 + 1) + 25);
-        //         this.physics.add.overlap(earth, asteroid, (earth, asteroid) => {
-        //             console.log('bump')
-        //             earth.hp -= 20;
-        //             asteroid.disableBody(true, true);
-        //         }, null, this);
-        //     });
-        // }, null, this);
+        // Create asteroid and star physics groups
+        assets.asteroids = this.physics.add.group();
+        assets.stars = this.physics.add.group();
 
         setInterval(() => {
+            // If page is visible, spawn asteroid at random position off-screen in top
             if (!document.hidden) {
                 let asteroid = assets.asteroids.create(Math.floor(Math.random() * (0 - config.width + 1)) + config.width, -500, 'asteroid');
                 asteroid.angle = Math.random() * (360 - 0 + 1) + 0;
                 this.physics.moveTo(asteroid, Math.floor(Math.random() * (0 - (config.width / 2) + 1) + (config.width / 2)) + (config.width / 2), config.height, Math.random() * (200 - 25 + 1) + 25);
-                // asteroid.anims.play('asteroid_move', true);
             }
         }, 5000);
-        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
 
         setInterval(() => {
+            // If page is visible, spawn star at random position off-screen in left
             if (!document.hidden) {
                 let star = assets.stars.create(-500, Math.floor(Math.random() * (0 - config.height + 1)) + config.height, 'star');
                 star.angle = Math.random() * (360 - 0 + 1) + 0;
                 this.physics.moveTo(star, config.width, Math.floor(Math.random() * (0 - (config.height) + 1) + config.height), Math.random() * (200 - 25 + 1) + 25);
-                // star.anims.play('star_move', true);
-                // star.body.collideWorldBounds = true;
-                // star.body.bounce.set(1);
             }
         }, 2000);
-        // }, Math.random() * (7500 - (-7500) + 1000) + -7500);
 
         // Add HP indicators
         assets.sharkhp = this.add.text(10, 10, 'HP: ' + player.hp + '%').setFontFamily('Overfield').setFontSize(16);
@@ -216,36 +178,18 @@
             // When Player collides with asteroid, reduce Player HP and delete asteroid
             this.physics.add.overlap(player, assets.asteroids, async (player, asteroid) => {
                 player.hp -= 10;
-                // asteroid.anims.play('asteroid_explosion', true);
-                // await sleep(5)
                 asteroid.disableBody(true, true);
             }, null, this);
             
             // When Player collides with star, increase Player HP and delete star
             this.physics.add.overlap(player, assets.stars, async (player, star) => {
                 player.hp += 5;
-                // for (const i of Array(10)) {
-                //     if (star.scale > 0) {
-                //         star.setScale(star.scale - 0.01);
-                //     } else {
-                //         star.disableBody(true, true);
-                //     }
-                //     await sleep(0.2);
-                // };
                 star.disableBody(true, true);
             }, null, this);
 
             // When asteroid collides with earth, reduce earth HP and delete asteroid
             this.physics.add.overlap(earth, assets.asteroids, async (earth, asteroid) => {
                 earth.hp -= 10;
-                // for (const i of Array(10)) {
-                //     if (asteroid.scale > 0) {
-                //         asteroid.setScale(asteroid.scale - 0.01);
-                //     } else {
-                //         asteroid.disableBody(true, true);
-                //     }
-                //     await sleep(0.2);
-                // };
                 asteroid.disableBody(true, true);
             }, null, this);
         }, null, this);
@@ -254,7 +198,7 @@
     };
 
     function update() {        
-        // WASD Movement
+        // WASD Movement (Unused, saved just incase)
         // player.setVelocityX(0);
         // player.setVelocityY(0);
 
@@ -279,7 +223,7 @@
         //     player.anims.play('move', true);
         // }
 
-        // Variable Bounds
+        // Min and Max Variable Bounds
         if (player.hp < 0) player.hp = 0;
         if (player.hp > 100) player.hp = 100;
         if (earth.hp < 0) earth.hp = 0;
@@ -348,14 +292,17 @@
 
     let cutsceneShot = 'none';
     async function loadCutscene() {
+        // Load Shot List
         let shots = [0, 1, 2, 3];
         state = 'cutscene';
+        // For each shot, check if cutscene is visible, then show shot and wait 10 secs
         for (const i of shots) {
             if (state == 'cutscene') {
                 cutsceneShot = i;
                 await sleep(10);
             };
         };
+        // If cutscene is visible and shots are over, play game
         if (state == 'cutscene') {
             cutsceneShot = 'none';
             await sleep(1);
@@ -396,8 +343,7 @@
 </script>
 
 <div id="mainbox" class="flex flex-row items-center w-screen h-screen overflow-hidden select-none justify-evenly font-space">
-    <!-- <h1 class="text-4xl font-bold text-white rotate-180 vertical-rl">DGT - Shark Space Game</h1> -->
-
+    <!-- Main Menu -->
     <div class:hidden={state != 'menu'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <div class="flex flex-col items-center justify-center flex-1 w-full">
             <h1 id="title" class="text-6xl text-center header">W<span class="border-t-8 border-white">a</span>hi Mango</h1>
@@ -409,11 +355,14 @@
             </div>
         </div>
 
+        <!-- Copyright Statement, Credits Link -->
         <h2 class="text-2xl text-center select-none font-round">&copy; IzMichael 2022 - <a href="https://izmichael.com" class="cursor-pointer hover:underline">izmichael.com</a> - <span on:click={() => state = 'credits'} class="cursor-pointer hover:underline">Credits & Attribution</span></h2>
     </div>
 
+    <!-- Tutorial Page -->
     <div class:hidden={state != 'tutorial'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="mb-3 text-6xl text-center header">How to Play</h1>
+        <!-- Available Keys -->
         <h2 class="mt-5 mb-3 text-2xl text-center font-round">You can use
              <img src="./assets/img/a.svg" class="inline-block w-8 aspect-square" title="'Letter A' Key" alt="Keyboard Key" />
              <img src="./assets/img/w.svg" class="inline-block w-8 aspect-square" title="'Letter W' Key" alt="Keyboard Key" />
@@ -423,17 +372,34 @@
              <img src="./assets/img/up.svg" class="inline-block w-8 aspect-square" title="'Up Arrow' Key" alt="Keyboard Key" />
              <img src="./assets/img/right.svg" class="inline-block w-8 aspect-square" title="'Right Arrow' Key" alt="Keyboard Key" />
              arrow keys to move.</h2>
+        <!-- Key Assignments -->
+        <h2 class="mb-3 text-2xl text-center font-round">The
+             <img src="./assets/img/w.svg" class="inline-block w-8 aspect-square" title="'Letter W' Key" alt="Keyboard Key" />
+             and
+             <img src="./assets/img/up.svg" class="inline-block w-8 aspect-square" title="'Up Arrow' Key" alt="Keyboard Key" />
+             keys propel you forwards, the
+             <img src="./assets/img/a.svg" class="inline-block w-8 aspect-square" title="'Letter A' Key" alt="Keyboard Key" />
+             and
+             <img src="./assets/img/left.svg" class="inline-block w-8 aspect-square" title="'Left Arrow' Key" alt="Keyboard Key" />
+             keys turn you anti-clockwise, and the
+             <img src="./assets/img/d.svg" class="inline-block w-8 aspect-square" title="'Letter D' Key" alt="Keyboard Key" />
+             and
+             <img src="./assets/img/right.svg" class="inline-block w-8 aspect-square" title="'Right Arrow' Key" alt="Keyboard Key" />
+             keys turn you clockwise.</h2>
+        <!-- Gameplay Instructions and Health Mechanics -->
         <h2 class="mb-3 text-2xl text-center font-round">Your goal is to defend Earth by destroying the asteroids before they hit the planet.</h2>
         <h2 class="mb-3 text-2xl text-center font-round">When Māngōroa (you, the shark) collides with an asteroid, you destroy it.<br>Destroying an asteroid will cause you to lose 10% of your Health Metre.</h2>
         <h2 class="mb-3 text-2xl text-center font-round">You can regain your health by consuming stars. To consume a star, simply collide with it.<br>Each star will restore 5% of your Health Metre.</h2>
         <h2 class="mb-3 text-2xl text-center font-round">When an asteroid collides with Earth, Earth will lose 10% of its Health Metre.<br>There is no way to restore Earth's Health Metre.</h2>
 
+        <!-- Return and Play Buttons -->
         <div class="flex flex-row items-center justify-center w-3/4">
             <button class="flex-1 p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => loadCutscene()}>Play Game</button>
             <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'menu'}>Back to Menu</button>
         </div>
     </div>
 
+    <!-- Credits Page -->
     <div class:hidden={state != 'credits'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">Credits & Attribution</h1>
         
@@ -443,39 +409,48 @@
         <h2 class="text-2xl text-center">App Space Background by <a href="https://opengameart.org/content/space-background-7" class="cursor-pointer hover:underline font-clean">drakzlin</a>.</h2>
         <h2 class="text-2xl text-center">Ocean Cutscene Background by <a href="https://opengameart.org/content/ocean-background" class="cursor-pointer hover:underline font-clean">KnoblePersona</a>.</h2>
 
+        <!-- Return Button -->
         <div class="flex flex-row items-center justify-center w-3/4">
             <button class="flex-1 p-3 px-24 mt-5 ml-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => state = 'menu'}>Back to Menu</button>
         </div>
     </div>
 
+    <!-- Game Canvas -->
     {#if killCanvas != true}
     <canvas id="game" class:hidden={state != 'game'} class="bg-blue-800 gameBox" bind:this={gameCanvas}></canvas>
     {/if}
     
+    <!-- Cutscene Page -->
     <div class:hidden={state != 'cutscene'} id="cutsceneWrapper" class="relative flex flex-col items-center justify-center overflow-hidden text-white bg-gray-900 gameBox" on:click={async () => { cutsceneShot = 'none'; await sleep(1); loadGame(); }}>
+        <!-- Page 1 -->
         <div class:opacity-0={cutsceneShot != 0} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
             <img src="./assets/img/cutscene1.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 1">
             <h1 class="p-10 text-2xl text-center font-round">Long ago, on an island quite close to here, there lived a group of people. These people were the Māori.</h1>
         </div>
 
+        <!-- Page 2 -->
         <div class:opacity-0={cutsceneShot != 1} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
             <img src="./assets/img/cutscene2.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 2">
             <h1 class="p-10 text-2xl text-center font-round">The Māori were afraid that their Earth could be harmed by things like stars and asteroids, and didn't know what to do.</h1>
         </div>
 
+        <!-- Page 3 -->
         <div class:opacity-0={cutsceneShot != 2} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
             <img src="./assets/img/cutscene3.gif" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 3">
             <h1 class="p-10 text-2xl text-center font-round">Until one day, when the Demigod Maui had an idea. Maui proposed that they send a shark, Māngōroa, into space to protect the tribes back on earth.</h1>
         </div>
 
+        <!-- Page 4 -->
         <div class:opacity-0={cutsceneShot != 3} class="absolute inset-0 flex flex-col items-center justify-center w-full h-full transition-opacity duration-1000 ease-in-out">
             <img src="./assets/img/cutscene4.png" class="object-cover object-center w-full overflow-hidden" alt="Cutscene Shot 4">
             <h1 class="p-10 text-2xl text-center font-round">And so they did, and Māngōroa is still up in space today, protecting the Earth from anything that may cause it harm.</h1>
         </div>
 
+        <!-- Skip Btn -->
         <p class:opacity-0={cutsceneShot == 'none'} class="absolute bottom-0 right-0 z-50 p-2 text-sm italic text-gray-500">Click anywhere to skip</p>
     </div>
 
+    <!-- Player Death Page -->
     <div class:hidden={state != 'playerDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">You Died!</h1>
         <h2 class="mb-5 text-4xl text-center">You defended the earth, but at great personal cost...</h2>
@@ -484,6 +459,7 @@
         <button class="p-3 px-24 mt-5 text-lg bg-green-600 hover:bg-green-500 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 
+    <!-- Earth Death Page -->
     <div class:hidden={state != 'earthDeath'} class="flex flex-col items-center justify-center px-20 py-10 text-white bg-blue-800 gameBox">
         <h1 class="text-6xl text-center header">You Failed!</h1>
         <h2 class="mb-5 text-4xl text-center">You failed to defend the earth from asteroids...</h2>
@@ -492,6 +468,7 @@
         <button class="p-3 px-24 mt-5 text-lg bg-green-400 rounded-xl" on:click={() => refresh()}>Back to Menu</button>
     </div>
 
+    <!-- Debug Output for Unit Testing -->
     {#if ready == true}
         <p class="hidden" id="readyState">Ready: {ready}</p>
     {/if}
@@ -501,23 +478,13 @@
     @tailwind base;
     @tailwind components;
     @tailwind utilities;
-    
-    /* .vertical-rl {
-        writing-mode: vertical-rl;
-    } */
-
-    /* #mainbox {
-        background-image: url('../assets/img/space2.png');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    } */
 
     #mainbox {
         position: relative;
         overflow: hidden;
     }
 
+    /* App Space Background */
     #mainbox::before {
         content: "";
         position: absolute;
@@ -528,9 +495,11 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+        /* Apply Continuous Spin Animation */
         animation: spin infinite 500s linear;
     }
 
+    /* Continuous Spin Animation */
     @keyframes spin {
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
@@ -539,8 +508,6 @@
     .gameBox {
         width: 1200px;
         max-height: 675px;
-        /* height: 675px; */
-        /* height: 100%; */
         aspect-ratio: 16 / 9;
         border-radius: 0.75rem;
         @apply border-4 border-gray-400 shadow-xl;

@@ -36,15 +36,16 @@ test('Main Menu has title, all buttons, footer white-label; buttons must be func
     const playBtn = page.locator('button >> text="Play Game" >> visible=true');
     await expect(playBtn).toBeVisible();
     await playBtn.click();
+
+    const cutsceneWrapper = page.locator('#cutsceneWrapper')
+    await expect(cutsceneWrapper).toBeVisible();
+    cutsceneWrapper.click();
+
     await expect(page.locator('canvas#game')).toBeVisible();
+    await expect(page.locator('#readyState')).toHaveText('Ready: true');
+    await sleep(0.5);
     await page.close();
 });
-
-async function backToMenu(page) {
-    const backBtn = page.locator('button >> text="Back to Menu" >> visible=true');
-    await expect(backBtn).toBeVisible();
-    await backBtn.click();
-};
 
 test('Fonts are loading correctly', async ({page}) => {
     await page.goto('/');
@@ -56,7 +57,17 @@ test('Fonts are loading correctly', async ({page}) => {
     await creditsBtn.click();
     await expect(page.locator('a >> text="Salted"')).toBeVisible();
     await expect(await page.evaluate(async () => { return document.fonts.check('24px Outfit'); })).toBeTruthy();
-    await page.close();
 
-    await backToMenu(page);
+    await sleep(0.5);
+    await page.close();
 });
+
+async function backToMenu(page) {
+    const backBtn = page.locator('button >> text="Back to Menu" >> visible=true');
+    await expect(backBtn).toBeVisible();
+    await backBtn.click();
+};
+
+function sleep(s) {
+    return new Promise(resolve => setTimeout(resolve, (s * 1000)));
+};
